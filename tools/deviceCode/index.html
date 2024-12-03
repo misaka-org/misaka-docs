@@ -1,0 +1,37 @@
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <title>获取设备指纹</title>
+    <script src="https://mobilelearn-static.chaoxing.com/mobilelearn/js/jquery.min.js?v=1725804000000"
+        type="text/javascript"></script>
+    <script src="https://mobilelearn-static.chaoxing.com/mobilelearn/front/mobile/sign/js/CXJSBridge.js?v=1725804000000"
+        type="text/javascript"></script>
+    <script type="text/javascript"
+        src="https://mobilelearn-static.chaoxing.com/mobilelearn/front/mobile/common/app.utils.js?v=1725804000000"
+        charset="utf-8"></script>
+</head>
+
+<body>
+    <main>
+        <div id="deviceCode"></div>
+    </main>
+
+    <script>
+        let deviceCode = "";
+        window.onload = () => {
+            // CLIENT_DEVICE_FLAG 获取设备指纹
+            jsBridge.bind('CLIENT_DEVICE_FLAG', async object => {
+                if (object && object.flagInfo) {
+                    deviceCode = object.flagInfo.replace(/[\r\n]+$/, '');
+                    await navigator.clipboard.writeText(deviceCode);
+                    AppUtils.clientMessageDisplay("您的设备指纹为：" + deviceCode + "，该指纹已复制");
+                    document.getElementById("deviceCode").innerText = deviceCode;
+                }
+            });
+            jsBridge.postNotification("CLIENT_DEVICE_FLAG", {});
+        };
+    </script>
+</body>
+
+</html>
